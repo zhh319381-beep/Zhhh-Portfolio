@@ -457,14 +457,14 @@
 
       .coze-frame {
         height: clamp(560px, 62vh, 760px);
-        display: grid;
-        place-items: stretch;
+        display: flex;
+        flex-direction: column;
         margin-top: 26px;
         border: 1px dashed #6a5a38;
-        background: #fff;
-        color: #b79a55;
-        text-align: center;
-        padding: 14px;
+        background: #151515;
+        color: #f5f1e8;
+        text-align: left;
+        padding: 18px;
         overflow: hidden;
       }
 
@@ -474,6 +474,98 @@
         min-height: 0;
         overflow: auto;
         text-align: left;
+      }
+
+      .assistant-tool {
+        display: grid;
+        gap: 14px;
+        height: 100%;
+      }
+
+      .assistant-tool label {
+        display: grid;
+        gap: 7px;
+        color: #b9aa8e;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .assistant-tool textarea,
+      .assistant-tool select,
+      .assistant-tool input {
+        width: 100%;
+        border: 1px solid #3d382f;
+        background: #0f0f0f;
+        color: #f5f1e8;
+        font: inherit;
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 12px;
+      }
+
+      .assistant-tool textarea {
+        min-height: 116px;
+        resize: vertical;
+      }
+
+      .assistant-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .assistant-tool button {
+        border: 1px solid #b79a55;
+        background: #b79a55;
+        color: #111;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 800;
+        padding: 12px 14px;
+      }
+
+      .assistant-tool button.secondary {
+        background: transparent;
+        color: #f5f1e8;
+        border-color: #514838;
+      }
+
+      .assistant-output {
+        min-height: 210px;
+        border-top: 1px solid #3d382f;
+        padding-top: 14px;
+        color: #d4cbbb;
+        line-height: 1.65;
+        overflow: auto;
+      }
+
+      .assistant-output h4 {
+        margin: 0 0 8px;
+        color: #f5f1e8;
+        font-size: 16px;
+      }
+
+      .assistant-output ol,
+      .assistant-output ul {
+        margin: 8px 0 14px;
+        padding-left: 20px;
+      }
+
+      .assistant-output li {
+        margin: 6px 0;
+      }
+
+      .assistant-output code {
+        display: block;
+        margin-top: 8px;
+        white-space: pre-wrap;
+        background: #0d0d0d;
+        color: #f5f1e8;
+        border: 1px solid #302b24;
+        padding: 12px;
+        font-family: Arial, Helvetica, sans-serif;
       }
 
       #cozeDirectorAssistant iframe,
@@ -937,12 +1029,43 @@
           </div>
           <div class="coze-frame">
             <div id="cozeDirectorAssistant">
-              <strong>导演小助手产品原型</strong><br />
-              已完成 PRD、Figma 原型与 Coze Agent 工作流。公开页展示产品逻辑，在线交互建议面试现场演示。
+              <form class="assistant-tool" id="directorAssistantForm">
+                <label>
+                  Creative Input
+                  <textarea
+                    name="idea"
+                    placeholder="例如：为一款降噪耳机生成一支 30 秒电影感广告，强调通勤场景里的安静感。"
+                    required
+                  ></textarea>
+                </label>
+                <label>
+                  Visual Style
+                  <select name="style">
+                    <option>电影感广告</option>
+                    <option>电商转化素材</option>
+                    <option>特殊效果短片</option>
+                    <option>品牌宣传片</option>
+                  </select>
+                </label>
+                <label>
+                  Reference Image
+                  <input name="reference" type="file" accept="image/*" />
+                </label>
+                <div class="assistant-actions">
+                  <button type="submit">生成分镜与 Prompt</button>
+                  <button class="secondary" type="button" id="assistantExample">填入示例</button>
+                </div>
+                <div class="assistant-output" id="assistantOutput" aria-live="polite">
+                  <h4>导演小助手</h4>
+                  <p>
+                    输入一句创意或上传参考图，系统会输出镜头分镜、镜头语言、AI 视频 Prompt 和 Bad Case 风险。
+                  </p>
+                </div>
+              </form>
             </div>
           </div>
           <p class="coze-note">
-            原型能力：自然语言 / 参考图输入 -> Prompt 与分镜输出；Coze 接入需安全授权，不在公开页暴露访问令牌。
+            支持自然语言 / 参考图输入 -> Prompt 与分镜输出；访问令牌仅在服务端使用，不在公开页暴露。
           </p>
         </div>
       </section>
@@ -1084,45 +1207,14 @@
           </a>
           <a
             class="work"
-            href="https://curse-alto-105.notion.site/AI-Video-Product-Manager-Portfolio-3a0e95434f4980df9069cae72f8dcc17?source=copy_link"
+            href="promo-film.html"
             data-category="promo"
             data-title="宣传片"
             data-type="宣传片 / 品牌叙事"
-            data-url="https://curse-alto-105.notion.site/AI-Video-Product-Manager-Portfolio-3a0e95434f4980df9069cae72f8dcc17?source=copy_link"
+            data-url="promo-film.html"
             data-insight="宣传片更考验整体叙事、视觉风格统一和信息层级，是 AI 视频从单镜头走向完整表达的能力证明。"
             type="button"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <div class="film" style="--cover:url('data:image/webp;base64,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')"><span class="film-label">宣传片</span></div>
-            <h3>宣传片</h3>
-            <p>完整叙事、视觉统一、信息节奏。</p>
-            <small>从单镜头能力到完整交付</small>
-          </a>
-        </div>
-      </section>
-
-      <section class="philosophy">
-        <div>
-          <span>Product View</span>
-          <h2>产品观点：创作经验让产品判断更准确。</h2>
-        </div>
-        <p>
-          AI 视频工具应该帮助创作者更清楚地表达画面、控制结果、复盘失败。
-          我的创作经验让我能更快识别用户卡点，并把它们转化为更稳定、更好用的产品设计。
-        </p>
-      </section>
-    </main>
-
-    <footer id="contact">
-      <div>
-        <h2>Let&apos;s talk</h2>
-      </div>
-      <a href="mailto:2207580943@qq.com">2207580943@qq.com</a>
-    </footer>
-    <script>
-      const filterButtons = document.querySelectorAll("[data-filter]");
-      const works = document.querySelectorAll(".work");
-    </script>
-  </body>
-</html>
+            <div class="film" style="--cover:url('data:image/webp;base64,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
