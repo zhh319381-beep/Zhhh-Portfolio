@@ -841,43 +841,6 @@
         }
       }
     </style>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.querySelector("#directorAssistantForm");
-  const output = document.querySelector("#assistantOutput");
-  const example = document.querySelector("#assistantExample");
-  if (!form || !output || form.dataset.ready === "true") return;
-  form.dataset.ready = "true";
-  const esc = (value) => String(value || "").replace(/[&<>'"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[c]);
-  function localAssistantResult(idea, style, referenceName) {
-    const cleanIdea = idea.trim() || "一支具有电影感的 AI 视频";
-    const cleanStyle = style || "电影感广告";
-    return {
-      summary: `将「${cleanIdea}」拆成 ${cleanStyle} 方向的可执行 AI 视频方案。`,
-      storyboard: [
-        {shot:"01", camera:"中近景，稳定推进", visual:"建立主体和环境关系，先给观众一个清楚的视觉锚点。", prompt:`${cleanIdea}，cinematic medium close-up, stable subject, soft directional light, clear visual hierarchy, ${cleanStyle}`},
-        {shot:"02", camera:"特写，轻微侧移", visual: referenceName ? `参考图 ${referenceName} 用于锁定视觉风格，并强调材质、表情或产品细节。` : "把抽象创意转成模型可识别的画面元素，强调材质、表情或产品细节。", prompt:"detail shot, tactile texture, controlled motion, shallow depth of field, realistic lighting, visual consistency"},
-        {shot:"03", camera:"运动镜头，转场衔接", visual:"用动作或光影完成节奏推进，避免主体漂移和风格断裂。", prompt:"smooth camera movement, coherent transition, same character identity, no flicker, no deformation, high-end commercial look"}
-      ],
-      prompt: `${cleanIdea}. ${cleanStyle}. Cinematic composition, stable subject identity, clear camera language, controlled lighting, coherent motion, high production value, no distortion, no extra limbs, no text artifacts.`,
-      risk: ["主体身份可能漂移：需要锁定人物/产品关键特征。", "转场容易断裂：镜头之间要保持光线和色调一致。", "Prompt 过抽象会导致模型误解：建议把情绪词转成镜头、材质、光影和动作。"]
-    };
-  }
-  function render(data) {
-    output.innerHTML = `<h4>${esc(data.summary)}</h4><strong>镜头分镜</strong><ol>${data.storyboard.map((item) => `<li><b>${esc(item.shot)} ${esc(item.camera)}</b><br>${esc(item.visual)}<code>${esc(item.prompt)}</code></li>`).join("")}</ol><strong>整合 Prompt</strong><code>${esc(data.prompt)}</code><strong>Bad Case 风险</strong><ul>${data.risk.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>`;
-  }
-  example?.addEventListener("click", () => {
-    form.elements.idea.value = "为一款 AI 创作平台生成一支 30 秒宣传片，画面需要有科技感、电影感和创作者工作流的节奏。";
-    form.elements.style.value = "品牌宣传片";
-  });
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const data = new FormData(form);
-    const reference = data.get("reference");
-    render(localAssistantResult(String(data.get("idea") || ""), String(data.get("style") || "电影感广告"), reference && reference.name ? reference.name : ""));
-  });
-});
-</script>
   </head>
   <body>
     <main>
@@ -991,7 +954,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <dl>
                 <div>
                   <dt>沉淀内容</dt>
-                  <dd>覆盖广告、电商、特效、宣传片等多场景的视频模板，内置成熟的运镜、风格与控制参数。</dd>
+                  <dd>覆盖广告、电商、特效等多场景的视频模板，内置成熟的运镜、风格与控制参数。</dd>
                 </div>
                 <div>
                   <dt>方法结构</dt>
@@ -1013,7 +976,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <dl>
                 <div>
                   <dt>作品类型</dt>
-                  <dd>薯片广告、榛果巧克力广告、苹果降噪耳机广告、电商视频、变装视频、蜘蛛侠变身、粒子化、宣传片。</dd>
+                  <dd>薯片广告、榛果巧克力广告、苹果降噪耳机广告、电商视频、变装视频、蜘蛛侠变身、粒子化。</dd>
                 </div>
                 <div>
                   <dt>创作重点</dt>
@@ -1031,7 +994,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <section class="agent" id="assistant">
         <div>
-          <p class="eyebrow">Coze Agent / Product Prototype</p>
+          <p class="eyebrow">Published Coze App / Product Prototype</p>
           <h2>导演小助手</h2>
           <p>
             这是作品集里的核心产品原型：把影视导演的拆解方法变成一个 AI Agent，
@@ -1061,7 +1024,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="coze-panel">
           <div>
-            <span class="film-label">Interactive Agent</span>
+            <span class="film-label">Director Translator App</span>
             <h3>从一句想法，到一组可执行镜头。</h3>
           </div>
           <div class="coze-frame">
@@ -1081,7 +1044,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <option>电影感广告</option>
                     <option>电商转化素材</option>
                     <option>特殊效果短片</option>
-                    <option>品牌宣传片</option>
+                    <option>品牌短片</option>
                   </select>
                 </label>
                 <label>
@@ -1093,16 +1056,14 @@ document.addEventListener("DOMContentLoaded", () => {
                   <button class="secondary" type="button" id="assistantExample">填入示例</button>
                 </div>
                 <div class="assistant-output" id="assistantOutput" aria-live="polite">
-                  <h4>导演小助手</h4>
-                  <p>
-                    输入一句创意或上传参考图，系统会输出镜头分镜、镜头语言、AI 视频 Prompt 和 Bad Case 风险。
-                  </p>
+                  <h4>导演翻译器应用版</h4>
+                  <p>已发布的 Coze 应用原型界面：输入创意或参考图后，输出分镜、镜头语言、AI 视频 Prompt 和 Bad Case 风险。</p>
                 </div>
               </form>
             </div>
           </div>
           <p class="coze-note">
-            支持自然语言 / 参考图输入 -> Prompt 与分镜输出；访问令牌仅在服务端使用，不在公开页暴露。
+            这里展示的是已发布 Coze 应用的产品界面与核心交互；公开页不暴露访问令牌。
           </p>
         </div>
       </section>
@@ -1113,14 +1074,13 @@ document.addEventListener("DOMContentLoaded", () => {
           <h2>精选 AI 视频作品</h2>
         </div>
         <p class="section-lead">
-          作品按使用场景分成四类：广告、电商、特殊效果、宣传片。视频作品不是单纯展示执行能力，而是作为产品判断、审美控制和生成限制理解的证据。
+          作品按使用场景分成四类：广告、电商、特殊效果。视频作品不是单纯展示执行能力，而是作为产品判断、审美控制和生成限制理解的证据。
         </p>
         <div class="category-nav" aria-label="Video categories">
           <button class="active" data-filter="all" type="button">全部</button>
           <button data-filter="ads" type="button">广告</button>
           <button data-filter="ecommerce" type="button">电商</button>
           <button data-filter="effects" type="button">特殊效果</button>
-          <button data-filter="promo" type="button">宣传片</button>
         </div>
         <div class="works">
           <a
@@ -1242,23 +1202,6 @@ document.addEventListener("DOMContentLoaded", () => {
             <p>主体消散、转场节奏、画面完整度。</p>
             <small>边缘控制与效果参数化</small>
           </a>
-          <a
-            class="work"
-            href="promo-film.html"
-            data-category="promo"
-            data-title="宣传片"
-            data-type="宣传片 / 品牌叙事"
-            data-url="promo-film.html"
-            data-insight="宣传片更考验整体叙事、视觉风格统一和信息层级，是 AI 视频从单镜头走向完整表达的能力证明。"
-            type="button"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div class="film" style="--cover:url('data:image/webp;base64,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')"><span class="film-label">宣传片</span></div>
-            <h3>宣传片</h3>
-            <p>完整叙事、视觉统一、信息节奏。</p>
-            <small>从单镜头能力到完整交付</small>
-          </a>
         </div>
       </section>
 
@@ -1358,8 +1301,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       assistantExample.addEventListener("click", () => {
         assistantForm.elements.idea.value =
-          "为一款 AI 创作平台生成一支 30 秒宣传片，画面需要有科技感、电影感和创作者工作流的节奏。";
-        assistantForm.elements.style.value = "品牌宣传片";
+          "为一款 AI 创作平台生成一支 30 秒品牌短片，画面需要有科技感、电影感和创作者工作流的节奏。";
+        assistantForm.elements.style.value = "品牌短片";
       });
 
       assistantForm.addEventListener("submit", (event) => {
