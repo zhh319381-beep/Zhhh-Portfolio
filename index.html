@@ -576,6 +576,44 @@
         border: 0;
       }
 
+      .coze-embed {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        height: 100%;
+      }
+
+      .coze-embed iframe {
+        flex: 1;
+        min-height: 420px;
+        background: #fff;
+      }
+
+      .coze-embed-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .coze-embed-actions a {
+        border: 1px solid #b79a55;
+        background: #b79a55;
+        color: #111;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 10px 14px;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .coze-embed-actions a.secondary {
+        background: transparent;
+        color: #f5f1e8;
+        border-color: #514838;
+      }
+
       .coze-note {
         margin-top: 14px;
         color: #b9aa8e;
@@ -1029,41 +1067,31 @@
           </div>
           <div class="coze-frame">
             <div id="cozeDirectorAssistant">
-              <form class="assistant-tool" id="directorAssistantForm">
-                <label>
-                  Creative Input
-                  <textarea
-                    name="idea"
-                    placeholder="例如：为一款降噪耳机生成一支 30 秒电影感广告，强调通勤场景里的安静感。"
-                    required
-                  ></textarea>
-                </label>
-                <label>
-                  Visual Style
-                  <select name="style">
-                    <option>电影感广告</option>
-                    <option>电商转化素材</option>
-                    <option>特殊效果短片</option>
-                    <option>品牌短片</option>
-                  </select>
-                </label>
-                <label>
-                  Reference Image
-                  <input name="reference" type="file" accept="image/*" />
-                </label>
-                <div class="assistant-actions">
-                  <button type="submit">生成分镜与 Prompt</button>
-                  <button class="secondary" type="button" id="assistantExample">填入示例</button>
+              <div class="coze-embed">
+                <iframe
+                  title="导演翻译器应用版"
+                  src="https://www.coze.cn/space/7621456627094519827/ui-builder-preview/7660100477790650402/pc/home"
+                  loading="lazy"
+                  allow="clipboard-write; fullscreen"
+                ></iframe>
+                <div class="coze-embed-actions">
+                  <a
+                    href="https://www.coze.cn/space/7621456627094519827/ui-builder-preview/7660100477790650402/pc/home"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >打开 Coze 应用</a>
+                  <a
+                    class="secondary"
+                    href="https://www.coze.cn/space/7621456627094519827/project-ide/7660100477790650402/ui-builder"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >查看产品搭建页</a>
                 </div>
-                <div class="assistant-output" id="assistantOutput" aria-live="polite">
-                  <h4>导演翻译器应用版</h4>
-                  <p>已发布的 Coze 应用原型界面：输入创意或参考图后，输出分镜、镜头语言、AI 视频 Prompt 和 Bad Case 风险。</p>
-                </div>
-              </form>
+              </div>
             </div>
           </div>
           <p class="coze-note">
-            这里展示的是已发布 Coze 应用的产品界面与核心交互；公开页不暴露访问令牌。
+            这里嵌入的是已发布 Coze 应用的真实预览页；如第三方页面限制嵌入，可点击按钮打开原应用。
           </p>
         </div>
       </section>
@@ -1239,84 +1267,6 @@
         });
       });
 
-      const assistantForm = document.querySelector("#directorAssistantForm");
-      const assistantOutput = document.querySelector("#assistantOutput");
-      const assistantExample = document.querySelector("#assistantExample");
-
-      function renderAssistantResult(data) {
-        const storyboard = data.storyboard || [];
-        const prompt = data.prompt || "暂无 Prompt 输出。";
-        const risk = data.risk || [];
-        const summary = data.summary || "已生成导演小助手结果。";
-
-        assistantOutput.innerHTML = `
-          <h4>${summary}</h4>
-          <strong>镜头分镜</strong>
-          <ol>
-            ${storyboard
-              .map(
-                (item) =>
-                  `<li><b>${item.shot || ""} ${item.camera || ""}</b><br>${item.visual || ""}<code>${item.prompt || ""}</code></li>`,
-              )
-              .join("")}
-          </ol>
-          <strong>整合 Prompt</strong>
-          <code>${prompt}</code>
-          <strong>Bad Case 风险</strong>
-          <ul>${risk.map((item) => `<li>${item}</li>`).join("")}</ul>
-        `;
-      }
-
-      function localAssistantResult(idea, style, referenceName) {
-        return {
-          summary: `将「${idea}」拆成 ${style} 方向的可执行 AI 视频方案。`,
-          storyboard: [
-            {
-              shot: "01",
-              camera: "中近景，稳定推进",
-              visual: "建立主体和环境关系，先给观众一个清楚的视觉锚点。",
-              prompt: `${idea}，cinematic medium close-up, stable subject, soft directional light, clear visual hierarchy, ${style}`,
-            },
-            {
-              shot: "02",
-              camera: "特写，轻微侧移",
-              visual: `强调材质、表情或产品细节。${referenceName ? `参考图 ${referenceName} 用于锁定视觉风格。` : "把抽象创意转成模型可识别的画面元素。"}`,
-              prompt: "detail shot, tactile texture, controlled motion, shallow depth of field, realistic lighting, visual consistency",
-            },
-            {
-              shot: "03",
-              camera: "运动镜头，转场衔接",
-              visual: "用动作或光影完成节奏推进，避免主体漂移和风格断裂。",
-              prompt: "smooth camera movement, coherent transition, same character identity, no flicker, no deformation, high-end commercial look",
-            },
-          ],
-          prompt: `${idea}. ${style}. Cinematic composition, stable subject identity, clear camera language, controlled lighting, coherent motion, high production value, no distortion, no extra limbs, no text artifacts.`,
-          risk: [
-            "主体身份可能漂移：需要锁定人物/产品关键特征。",
-            "转场容易断裂：镜头之间要保持光线和色调一致。",
-            "Prompt 过抽象会导致模型误解：建议把情绪词转成镜头、材质、光影和动作。",
-          ],
-        };
-      }
-
-      assistantExample.addEventListener("click", () => {
-        assistantForm.elements.idea.value =
-          "为一款 AI 创作平台生成一支 30 秒品牌短片，画面需要有科技感、电影感和创作者工作流的节奏。";
-        assistantForm.elements.style.value = "品牌短片";
-      });
-
-      assistantForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const form = new FormData(assistantForm);
-        const reference = form.get("reference");
-        renderAssistantResult(
-          localAssistantResult(
-            String(form.get("idea") || ""),
-            String(form.get("style") || "电影感广告"),
-            reference && reference.name ? reference.name : "",
-          ),
-        );
-      });
     </script>
   </body>
 </html>
